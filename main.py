@@ -1,10 +1,17 @@
 import pandas as pd
+import os
+from dotenv import load_dotenv
 import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 from discord.utils import get
 
+# load tokens from .env file
+load_dotenv()
+
 # ATTEMPTS_CSV = 'CSE221-attempts.csv'
+
+# CSV file location containing student information: std_id, name, section, attempts
 INFO_CSV = 'CSE221-student-info.csv'
 
 client = discord.Client()
@@ -52,6 +59,7 @@ def find_member_csv(file, sid):
     return student_id, name, section, attempts
 
 
+# Check if author has a role: in_role
 def has_role(author, in_role):
     for role in author.roles:
         if role.name == in_role:
@@ -155,13 +163,14 @@ async def clear(ctx, amount=10):
     await ctx.channel.purge(limit=amount)
 
 
-@bot.command()
-@has_permissions(administrator=True)
-async def clearChannel(ctx, channelName, amount):
-    channel = discord.utils.get(ctx.guild.channels, name=channelName)
-    await channel.purge(limit=amount)
+# @bot.command()
+# @has_permissions(administrator=True)
+# async def clearChannel(ctx, channelName, amount):
+#     channel = discord.utils.get(ctx.guild.channels, name=channelName)
+#     await channel.purge(limit=amount)
 
-
+# Remove all members from a server except admins
+# and those whose top_role are placed above the bot in the roles page
 @bot.command()
 @has_permissions(administrator=True)
 async def removeR(ctx, role: discord.Role, *, reason=None):
@@ -176,28 +185,9 @@ async def removeR(ctx, role: discord.Role, *, reason=None):
 
 @bot.command()
 @has_permissions(administrator=True)
-async def getAllRoles(ctx):
-    for role in ctx.guild.roles:
-        # await ctx.send(f'role: {role.name}')
-        # print(f'role: {role.name}')
-        print()
-    print(len(ctx.author.roles))
-
-
-@bot.command()
-@has_permissions(administrator=True)
 async def getAllChannels(ctx):
     for channel in bot.get_all_channels():
         await ctx.send(f'member: {channel.name}')
-
-
-@bot.command()
-@has_permissions(administrator=True)
-async def getInfo(ctx):
-    print(ctx.guild.name)
-    await ctx.send(ctx.author.mention)
-    print(len(ctx.author.roles))
-    # await ctx.send(f'member: {channel.name}')
 
 
 bot.run('TOKEN')
