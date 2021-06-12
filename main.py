@@ -85,7 +85,7 @@ async def on_message(message):
         await bot.process_commands(message)
     elif channel.name in ['verify-me', 'test-bot']:
 
-        if author.top_role.name in ['faculty', 'student-tutor']:
+        if author.top_role.name in ['@faculty','@theoryfaculty', '@labfaculty', '@student-tutor']:
             await message.channel.send(f'Sorry. You are not eligible for verification!')
             return
 
@@ -189,5 +189,4 @@ async def getAllChannels(ctx):
     for channel in bot.get_all_channels():
         await ctx.send(f'member: {channel.name}')
 
-
-bot.run('TOKEN')
+bot.run(os.environ.get('TOKEN'))
